@@ -5,12 +5,18 @@ import click
 from tfdread.binary_utils import *
 
 
+format_index_a_date = lambda *args: "{}-{:02.0f}-{:02.0f} {:02.0f}:{:02.0f}:{:02.0f}".format(
+    args[0], args[1] + args[2], args[3], args[4], args[5], args[6]
+)
+
+
 class IndexA(Record):
     fields = [("i1", "short", "2h", 1, lambda v: v)]
 
 
 class IndexADate(Record):
-    fields = [("date", "short", "12s", 1, lambda v: str(v))]
+    fields = [("date", "short", "12h", 12, lambda *v: str(list(zip(range(len(v)), v))))]
+    # fields = [("date", "short", "12h", 12, format_index_a_date)]
 
 
 class IndexB(Record):
@@ -19,6 +25,8 @@ class IndexB(Record):
 
 class IndexC(Record):
     fields = [("l", "short", "2h", 1, lambda v: v)]
+
+
 
 
 @click.command()
@@ -42,7 +50,9 @@ def read_file(file):
     file.seek(116)
     length = indexA["i1"] - 116
     infoA = Record(
-        fields=[("contents", "", "{:d}s".format(length), 1, lambda v: v.decode("ascii"))]
+        fields=[
+            ("contents", "", "{:d}s".format(length), 1, lambda v: v.decode("ascii").split("\r\n"))
+        ]
     ).unpack(file)
 
     return {
