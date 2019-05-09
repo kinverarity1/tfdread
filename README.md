@@ -5,6 +5,8 @@ Python package to read data from TFD files used in geophysical logging.
 I'm working from the incredibly helpful paper by 
 [Liang and Zhang (2015)](https://www.researchgate.net/publication/301431667_Decoding_and_Conversion_of_TFD_Logging_Data_Format_Based_on_Java).
 
+At the moment the header is being read in OK. Simple curve data will be next.
+
 ## Install 
 
 ```posh
