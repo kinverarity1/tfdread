@@ -1,3 +1,1 @@
-from tfdread.tfdreader import *
-
-open = TFD
+from tfdread.tfdreader import TFD as open

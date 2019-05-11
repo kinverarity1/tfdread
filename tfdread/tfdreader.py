@@ -80,8 +80,8 @@ class TFD:
             *[self.timestamp_field["date"][i] for i in (0, 1, 3, 4, 5, 6)]
         )
 
-    def to_dict(self):
-        return {
+    def to_dict(self, debug=False):
+        result = {
             "_filename": self.filename,
             "timestamp": self.timestamp,
             "_structs": {
@@ -92,6 +92,9 @@ class TFD:
                 "info_a": self.info_a,
             },
         }
+        if not debug:
+            result = {k: v for k, v in result.items() if not k[0] == "_"}
+        return result
 
     def to_json(self, indent=2, **kwargs):
         d = self.to_dict()
@@ -101,6 +104,7 @@ class TFD:
 
 @click.command()
 @click.argument("f", type=click.Path(exists=True))
-def open_entry_point(f):
+@click.option("-d", "--debug", default=False)
+def open_entry_point(f, debug):
     with TFD(f) as f2:
-        print(f2.to_json())
+        print(f2.to_json(debug=debug))
